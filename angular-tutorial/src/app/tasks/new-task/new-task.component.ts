@@ -29,5 +29,7 @@ export class NewTaskComponent {
         date: this.enteredDate
       },
       this.userId);
+
+      this.close.emit();
   }
 }
