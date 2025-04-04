@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { NewTaskData, Task } from "./task/task.model";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class TasksService {
 
     private tasks = [
@@ -28,7 +28,14 @@ export class TasksService {
                 'Prepare and describe an issue template which will help with project management',
             dueDate: '2024-06-15',
         },
-    ]
+    ];
+
+    constructor() {
+        const tasks = localStorage.getItem('tasks')
+        if (tasks) {
+            this.tasks = JSON.parse(tasks);
+        }
+    }
 
     getUserTasks(userId: string): Task[] {
         return this.tasks.filter(task => task.userId === userId);
@@ -41,11 +48,17 @@ export class TasksService {
             title: taskData.title,
             summary: taskData.summary,
             dueDate: taskData.date
-        })
+        });
+        this.saveTasks();
     }
 
     removeTask(id: string) {
         this.tasks = this.tasks.filter(task => task.id != id);
+        this.saveTasks();
+    }
+
+    private saveTasks() {
+        localStorage.setItem('tasks', JSON.stringify(this.tasks));
     }
 
 }
